@@ -26,6 +26,7 @@
 
     <properties>
         <version.arquillian_core>1.0.3.Final</version.arquillian_core>
+        <version.selenium>2.31.0</version.selenium>
         <version.org.jboss.jbossas>7.1.1.Final</version.org.jboss.jbossas>
         <version.junit>4.10</version.junit>
     </properties>
@@ -62,6 +63,13 @@
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-container-test-impl-base</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-server</artifactId>
+            <version>${version.selenium}</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

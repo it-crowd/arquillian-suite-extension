@@ -25,6 +25,7 @@ import org.jboss.arquillian.core.spi.LoadableExtension;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.arquillian.test.spi.annotation.ClassScoped;
 import org.jboss.arquillian.test.spi.context.ClassContext;
+import org.openqa.selenium.server.SeleniumServer;
 
 import java.util.concurrent.Callable;
 
@@ -54,6 +55,8 @@ public class ArquillianSuiteExtension implements LoadableExtension {
 
         @Inject
         private Event<GenerateDeployment> generateDeploymentEvent;
+
+        private SeleniumServer seleniumServer;
 
         private boolean suiteDeploymentGenerated;
 
@@ -138,8 +141,20 @@ public class ArquillianSuiteExtension implements LoadableExtension {
             }
         }
 
+        private void startSeleniumServer()
+        {
+            try {
+                seleniumServer = new SeleniumServer(false);
+                seleniumServer.start();
+            } catch (Exception e) {
+                throw new RuntimeException("Could not start selenium server: ", e);
+            }
+        }
+
         public void startup(@Observes(precedence = -100) ManagerStarted event, ArquillianDescriptor descriptor)
         {
+            startSeleniumServer();
+
             deploymentClass = getDeploymentClass(descriptor);
 
             executeInClassScope(new Callable<Void>() {
@@ -165,6 +180,7 @@ public class ArquillianSuiteExtension implements LoadableExtension {
                     return null;
                 }
             });
+            seleniumServer.stop();
         }
     }
 }
